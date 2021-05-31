@@ -30,9 +30,13 @@ const int pwmLedChannelTFT = 0;
 extern const char ssid[];
 extern const char password[];
 
-/**
+/** 
  *  you can get info (town,country,key,gps)
+ *  아래 날씨정보사이트에서 자료를 불러올수 있음.
  *  https://openweathermap.org/api
+ * 
+ *  how to use - 자세한 이용방법은 
+ *  https://blog.naver.com/soneh0416/222334947140
  *
  **/
 
