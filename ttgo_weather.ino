@@ -25,10 +25,10 @@ const int pwmLedChannelTFT = 0;
 
 extern const char ssid[];
 extern const char password[];
+extern const String key ;     // private user api key for Open Weather
 
 String town="Glons";        // modify user location
 String Country="BE";         // modify user country
-//const String key = "";     // modify user api key
 
 const String endpoint = "http://api.openweathermap.org/data/2.5/weather?q="+town+","+Country+"&units=metric&APPID=";
 
@@ -210,17 +210,15 @@ void loop() {
   
 //  tft.pushImage(70, 88,  60, 60, ez13d);
 
-  if((unsigned long)(millis() - previousMillis) >= interval)
-  {
+  if((unsigned long)(millis() - previousMillis) >= interval) {
     Serial.println("------------>switch");
-    // 시간되 었을때 수행할 내용
     inv=!inv;
     snapshotTime(5);
   }
 
 
 
-   if(digitalRead(35)==0){
+   if(digitalRead(35)==0) {
     Serial.println("---------------------->click 1 오른쪽 버턴 클릭");
      if(press2==0){
       press2=1;
@@ -365,23 +363,19 @@ void loop() {
  
   timeStamp = formattedDate.substring(splitT+1, formattedDate.length()-1);
          
-  if(curSeconds!=timeStamp.substring(6,8)){
-  // 초 출력
-   tft.fillRect(78,164,48,28,darkred);
-   tft.setFreeFont(&Orbitron_Light_24);                   
-   tft.setCursor(81, 186);
-   tft.println(timeStamp.substring(6,8));
-   curSeconds=timeStamp.substring(6,8);
+  if(curSeconds!=timeStamp.substring(6,8)) {
+    tft.fillRect(78,164,48,28,darkred);
+    tft.setFreeFont(&Orbitron_Light_24);                   
+    tft.setCursor(81, 186);
+    tft.println(timeStamp.substring(6,8));
+    curSeconds=timeStamp.substring(6,8);
   }
   
   tft.setFreeFont(&Orbitron_Light_32);
   
-  
   String current=timeStamp.substring(0,5);
   if(current!=tt)
   {
-    // 시간 출력
-    Serial.print("시간:");
     Serial.println(timeClient.getHours());
   
     hh = timeClient.getHours();
@@ -391,27 +385,11 @@ void loop() {
     tft.setCursor(5, 34);
   //            tft.println(timeStamp.substring(0,5)); // 시간 출력
     
-    if(hh > 12)
-    {
-      hh = hh - 12;
-      Serial.println(chNF2(hh));
-      tft.print(chNF2(hh));
-      tft.print(":");
-      tft.print(chNF2(mm));
-      apm = "PM";
-    }else
-    {
-      tft.print(chNF2(hh));
-      tft.print(":");
-      tft.print(chNF2(mm));
-      apm = "AM";
-    }
-    
-  
-    
+    tft.print(chNF2(hh));
+    tft.print(":");
+    tft.print(chNF2(mm));
     tft.setTextFont(2);
     tft.setCursor(111, 21);
-    tft.println(apm);
     
     tt=timeStamp.substring(0,5);
   }
@@ -419,25 +397,22 @@ void loop() {
   delay(80);
 }
 
-String rtn = "";
+//String rtn = ""; // Global !?!
 
-String chNF2(int num)
-{
-  rtn = "";
-  if(num < 10)
-  {
+String chNF2(int num) {
+  
+  string rtn = "";
+  if(num < 10) {
     rtn += '0';
     rtn += num;
-  }else
-  {
+  } else {
     rtn += num;
   }
   return rtn;
 }
 
 
-void getData()
-{
+void getData() {
     tft.fillRect(1,170,64,20,TFT_BLACK);
     tft.fillRect(1,210,64,20,TFT_BLACK);
    if ((WiFi.status() == WL_CONNECTED)) { //Check the current connection status
@@ -449,14 +424,11 @@ void getData()
         payload = http.getString();
         // Serial.println(httpCode);
         Serial.println(payload);
-      }else {
+      } else {
         Serial.println("Error on HTTP request");
       }
       http.end(); //Free the resources
 
-      /**
-       * 미세먼지값 불러 오기
-       */
       http.begin(airpollution + key); //Specify the URL
       httpCode = http.GET();  //Make the request
    
@@ -468,8 +440,6 @@ void getData()
         Serial.println("Error on HTTP request");
       }
       http.end(); //Free the resources
-
-      // 
     }
     
     char inp[1000];
