@@ -1,10 +1,10 @@
-#include "userinfo.h"
-#include "ani.h"
+#include "userinfo.h" // contains credentials
+#include "ani.h"     // animation data
 #include "ez10d.h" // day
 #include "ez01n.h" // night
-#include <SPI.h>
-#include <TFT_eSPI.h> // Hardware-specific library
-#include <ArduinoJson.h>         //https://github.com/bblanchon/ArduinoJson.git
+//#include <SPI.h>
+#include <TFT_eSPI.h>            // Hardware-specific library
+#include "ArduinoJson-v6.14.1.h" //https://github.com/bblanchon/ArduinoJson.git single file moved local
 #include <NTPClient.h>           //https://github.com/taranais/NTPClient
 
 TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
@@ -14,8 +14,8 @@ TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 #define darkred 0xA041
 #define blue 0x5D9B
 #include "Orbitron_Medium_20.h"
-#include <WiFi.h>
 
+#include <WiFi.h>
 #include <WiFiUdp.h>
 #include <HTTPClient.h>
 
@@ -23,25 +23,11 @@ const int pwmFreq = 5000;
 const int pwmResolution = 8;
 const int pwmLedChannelTFT = 0;
 
-
-//const char* ssid     = ""; // not use - blynk 
-//const char* password = ""; // not use - blynk 
-
 extern const char ssid[];
 extern const char password[];
 
-/** 
- *  you can get info (town,country,key,gps)
- *  아래 날씨정보사이트에서 자료를 불러올수 있음.
- *  https://openweathermap.org/api
- * 
- *  how to use - 자세한 이용방법은 
- *  https://blog.naver.com/soneh0416/222334947140
- *
- **/
-
-String town="Hwawŏn";        // modify user location
-String Country="KR";         // modify user country
+String town="Glons";        // modify user location
+String Country="BE";         // modify user country
 //const String key = "";     // modify user api key
 
 const String endpoint = "http://api.openweathermap.org/data/2.5/weather?q="+town+","+Country+"&units=metric&APPID=";
@@ -57,7 +43,6 @@ String icon="";
 String getpoll="";  
 String pol25="";
 String pol10="";
-
 
 StaticJsonDocument<1000> doc;
 
@@ -77,9 +62,9 @@ void setup(void) {
   pinMode(0,INPUT_PULLUP);
   pinMode(35,INPUT);
 
-   
+  
   tft.init();
-  tft.setRotation(0);
+  tft.setRotation(180);
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(TFT_WHITE,TFT_BLACK);  
   tft.setTextSize(1);
@@ -96,7 +81,7 @@ void setup(void) {
   while (WiFi.status() != WL_CONNECTED) {
     delay(300);
     tft.print(".");
-  }
+  } // TODO REFACTOR, This is infinite loop, should catch error.
   
   tft.println("");
   tft.println("WiFi connected.");
